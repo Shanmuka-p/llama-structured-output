@@ -1,0 +1,3 @@
+# Place one raw fine-tuned model response per line, aligned to data/heldout_test.jsonl order.
+# Example: the first line is the fine-tuned-model response for the first held-out doc.
+
