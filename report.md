@@ -1,0 +1,9 @@
+Prompting vs. Fine-Tuning — 300-word analysis
+
+Fine-tuning to enforce structured JSON output is the right engineering lever when format consistency is a hard production requirement. Prompt engineering can often coax a model into producing valid JSON for many examples, but it remains brittle: stricter prompts reduce variance but increase sensitivity to phrasing and document noise, and they often fail silently by wrapping JSON in markdown or adding preambles. Fine-tuning via LoRA aligns the model's internal priors with the desired surface form, making valid JSON the default behavior even on noisy or out-of-distribution layouts.
+
+In this project, prompt engineering is useful for quick iterations and debugging: it helps reveal edge-case document layouts and exposes what the model misunderstands. On a small set of difficult examples, strong few-shot prompts may recover correct outputs without any weight updates. However, when scaling to a production pipeline that consumes hundreds or thousands of documents per day, human-in-the-loop costs are dominated by parse failures; a fine-tuned model that returns parseable JSON 98–99% of the time is far more valuable than a non-fine-tuned model that is 95% accurate but only 70% parseable.
+
+Operationally, use prompts first to explore schema design and to create high-quality training labels. Once the schema is stable and you have curated diverse examples covering layout variations, use LoRA fine-tuning to lock in formatting behaviour. Reserve prompt engineering for short-term remediation (e.g., when a new supplier layout appears) and for targeted few-shot fixes. The hybrid approach — iterative prompt-driven curation followed by LoRA fine-tuning — yields the best trade-off between engineering cost, reliability, and generalisability.
+
+(End of analysis)
